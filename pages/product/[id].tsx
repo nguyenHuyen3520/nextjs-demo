@@ -52,7 +52,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   const res = await fetch(`${process.env.API_URL}`)
   const product: product[] = await res.json()
-  var result: product = product.find((p : product) => p.id.toString() === id)
+  var result = product.find((p : product) => p.id.toString() === id)
 
   return { props: { result } }
 }
