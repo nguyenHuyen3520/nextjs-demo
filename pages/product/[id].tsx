@@ -1,5 +1,8 @@
 import { InferGetStaticPropsType, GetStaticPaths, GetStaticProps } from 'next'
 import { useRouter } from 'next/router'
+import {
+   ParsedUrlQuery
+} from 'querystring'
 type product = {
     id: number,
     name: string,
@@ -10,8 +13,14 @@ type params = {
     id: number
 }
 
-function Product({ product }: InferGetStaticPropsType<typeof getStaticProps>) {
-    const data: product = product
+interface IParams extends ParsedUrlQuery {
+   id: string
+}
+
+function Product({ result }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const data: product = result
+  console.log(typeof result);
+  
 
     return (
         <div>
@@ -22,31 +31,28 @@ function Product({ product }: InferGetStaticPropsType<typeof getStaticProps>) {
 }
 
 
-
-export const getStaticPaths: GetStaticPaths= async() => {
+export const getStaticPaths: GetStaticPaths = async () => {
 
   const res = await fetch(`${process.env.API_URL}`)
   const products: product[] = await res.json()
 
 
-  const paths = products.map((product) => ({
-    params: { id: product.id.toString() }
-  }))
+  const paths= products.map((product: product) => (
+    {params: { id: product.id.toString() }}
+  ))
 
   return { paths, fallback: false }
 }
 
 
-export async function getStaticProps({ params}: any) {
+export const getStaticProps: GetStaticProps = async ({params}) => {
+     const {
+      id
+   } = params as IParams
 
   const res = await fetch(`${process.env.API_URL}`)
-  const product = await res.json()
-  var result: product = product.find(({ p }: product) => {
-    if (p.id) {
-      return p.id === params.id
-    }
-    return { id: 99, name: "false"}
-  })
+  const product: product[] = await res.json()
+  var result: product = product.find((p : product) => p.id.toString() === id)
 
   return { props: { result } }
 }
