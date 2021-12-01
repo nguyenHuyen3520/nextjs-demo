@@ -9,7 +9,8 @@ type Product = {
 export const getStaticProps = async (context: any) => {
   require('dotenv').config()
   console.log(context);
-  const res = await fetch(`${process.env.API_URL}`)
+  // const res = await fetch(`${process.env.API_URL}`)
+  const res = await fetch("http://localhost:3000/api/product")
   const products: Product[] = await res.json()
   return {
     props: {
