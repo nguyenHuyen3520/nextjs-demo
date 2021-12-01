@@ -1,5 +1,7 @@
 
 
 export default function Index() {
-  return <div>trang chu</div>
+
+  return <div>Day la trang chu</div>
+
 }
